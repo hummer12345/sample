@@ -1,0 +1,38 @@
+version: "3"
+services:
+  #db:
+  #  container_name: mysql
+  #  image: mysql:8.0
+  #  expose:
+  #    - "3306"
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: "laravel"
+  #    MYSQL_DATABASE: "laravel"
+  #    TZ: "Asia/Tokyo"
+  #  command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  backend:
+    container_name: backend
+    build: ./backend
+    volumes:
+      - ./source/backend:/var/www/html
+    working_dir: /backend
+    #cmd: chown www-data storage/ -R
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./source/frontend:/frontend
+    tty: true
+    working_dir: /frontend
+
+  server:
+    container_name: nginx
+    image: nginx:latest
+    tty: true
+    volumes:
+      - "./nginx:/etc/nginx/conf.d"
+      - "./source/backend:/usr/share/nginx/html"
